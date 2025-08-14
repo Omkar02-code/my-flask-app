@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Preview Complaints Import</title>
+</head>
+<body>
+  <h1>Preview Complaints Import</h1>
+  <a href="{{ url_for('index') }}">Home</a> 
+
+  <p>Total rows in file: {{ summary.total_rows }}</p>
+  <p>Valid rows to import: {{ summary.valid_rows }}</p>
+  <p>Invalid rows: {{ summary.invalid_rows }}</p>
+
+  {% if errors and errors|length %}
+    <h3>Row errors</h3>
+    <ul>
+      {% for e in errors %}
+        <li>Row {{ e.row_index }}: {{ ', '.join(e.errors) }}</li>
+      {% endfor %}
+    </ul>
+    <p style="color:#a00">
+      Fix the file and re-upload for the cleanest import.
+    </p>
+  {% endif %}
+
+  {% if summary.valid_rows > 0 %}
+    <!-- Confirm form -->
+    <form method="post" action="{{ url_for('import_complaints_confirm') }}">
+      <button type="submit">Confirm Import</button>
+    </form>
+  {% else %}
+    <p>No valid rows to import.</p>
+  {% endif %}
+
+  <p><a href="{{ url_for('import_complaints') }}">Upload another file</a></p>
+</body>
+</html>

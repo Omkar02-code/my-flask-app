@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Materials for Work #{{ work['id'] }}</title>
+</head>
+<body>
+    <h1>Materials for Work #{{ work['id'] }}</h1>
+    <p>
+        <strong>Date:</strong> {{ work['work_date'] }} |
+        <strong>Team:</strong> {{ work['team_member'] }} |
+        <strong>OHT:</strong> {{ work['OHT'] }} |
+        <strong>Area:</strong> {{ work['area'] }}
+    </p>
+    <p><strong>Description:</strong> {{ work['work_description'] }}</p>
+
+    <a href="{{ url_for('add_material', work_id=work['id']) }}">➕ Add Material</a>
+    <br><br>
+
+    {% if materials %}
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        {% for m in materials %}
+        <tr>
+            <td>{{ m['id'] }}</td>
+            <td>{{ m['material_name'] }}</td>
+            <td>{{ m['quantity_used'] }}</td>
+            <td>
+                <a href="{{ url_for('edit_material', material_id=m['id']) }}">Edit</a>
+                <form method="post" action="{{ url_for('delete_material', material_id=m['id']) }}"
+                      style="display:inline" onsubmit="return confirm('Delete this material?');">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No materials linked to this work yet.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('teamwork') }}">⬅ Back to TeamWork</a></p>
+</body>
+</html>

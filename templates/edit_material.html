@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Material</title>
+</head>
+<body>
+    <h1>Edit Material #{{ m['id'] }}</h1>
+    <a href="{{ url_for('materials') }}">Back to Materials List</a>
+
+    <form method="post">
+        <!-- Material Name -->
+        <p>
+            <label>Material Name:<br>
+                <input type="text" name="material_name" 
+                       value="{{ m['material_name'] }}" 
+                       required>
+            </label>
+        </p>
+
+        <!-- Quantity Used -->
+        <p>
+            <label>Quantity Used (optional):<br>
+                <input type="number" step="any" name="quantity_used"
+                       value="{{ m['quantity_used'] if m['quantity_used'] is not none else '' }}"
+                       placeholder="e.g., 10 or 2.5">
+            </label>
+        </p>
+
+        <!-- Link to Work -->
+        <p>
+            <label>Link to Work:<br>
+                <select name="work_id" required>
+                    {% for w in works %}
+                        <option value="{{ w['id'] }}"
+                            {% if m['work_id'] == w['id'] %}selected{% endif %}>
+                            {{ w['id'] }} - {{ w['label'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </p>
+
+        <!-- Submit Button -->
+        <p>
+            <button type="submit">Save Changes</button>
+        </p>
+    </form>
+</body>
+</html>

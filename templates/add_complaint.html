@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Complaint</title>
+</head>
+
+<body>
+    <h1>Add New Consumer Complaint</h1>
+    <a href="{{ url_for('complaints') }}">Back to Complaints</a>
+    <form method="post">
+        <p>
+            <label>Date:<br><input type="date" name="complaint_date" required></label>
+        </p>
+        <p>
+            <label>Customer Name:<br><input type="text" name="customer_name" required></label>
+        </p>
+        <p>
+            <label>Consumer Mobile Number:<br><input type="text" name="consumer_mobile_number"></label>
+        </p>
+        <p>
+            <label>OHT Name:<br><input type="text" name="OHT_name"></label>
+        </p>
+        <p>
+            <label>issue:<br><input type="text" name="issue"></label>
+        </p>
+        <p>
+            <label>Address:<br><input type="text" name="Address"></label>
+        </p>
+        <p>
+            <label>Longitude:<br><input type="number" step="any" name="longitude"></label>
+        </p>
+        <p>
+            <label>Latitude:<br><input type="number" step="any" name="latitude"></label>
+        </p>
+        <p>
+            <label>Complaint Details:<br><textarea name="complaint_details"></textarea></label>
+        </p>
+        <p>
+            <label>Status:<br>
+                <select name="status">
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </label>
+        </p>
+        <p>
+            <button type="submit">Add Complaint</button>
+        </p>
+    </form>
+</body>
+
+</html>
