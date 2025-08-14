@@ -1,0 +1,9 @@
+flask
+gunicorn
+pandas
+openpyxl
+json
+datetime
+sqlite3
+os
+re
