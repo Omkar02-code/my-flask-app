@@ -1,48 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Materials for Work #{{ work['id'] }}</title>
-</head>
-<body>
-    <h1>Materials for Work #{{ work['id'] }}</h1>
-    <p>
-        <strong>Date:</strong> {{ work['work_date'] }} |
-        <strong>Team:</strong> {{ work['team_member'] }} |
-        <strong>OHT:</strong> {{ work['OHT'] }} |
-        <strong>Area:</strong> {{ work['area'] }}
-    </p>
-    <p><strong>Description:</strong> {{ work['work_description'] }}</p>
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Materials for Work #{{ work.id }}</h2>
+  <div class="mb-3">
+    <div><strong>Date:</strong> {{ work.work_date }}</div>
+    <div><strong>Team Member:</strong> {{ work.team_member }}</div>
+    <div><strong>OHT:</strong> {{ work.OHT or '' }}</div>
+    <div><strong>Area:</strong> {{ work.area or '' }}</div>
+    <div><strong>Description:</strong> {{ work.work_description or '' }}</div>
+  </div>
 
-    <a href="{{ url_for('add_material', work_id=work['id']) }}">➕ Add Material</a>
-    <br><br>
-
-    {% if materials %}
-    <table border="1" cellpadding="5" cellspacing="0">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-        </tr>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-light">
+        <tr><th>ID</th><th>Material</th><th>Quantity</th></tr>
+      </thead>
+      <tbody>
         {% for m in materials %}
-        <tr>
-            <td>{{ m['id'] }}</td>
-            <td>{{ m['material_name'] }}</td>
-            <td>{{ m['quantity_used'] }}</td>
-            <td>
-                <a href="{{ url_for('edit_material', material_id=m['id']) }}">Edit</a>
-                <form method="post" action="{{ url_for('delete_material', material_id=m['id']) }}"
-                      style="display:inline" onsubmit="return confirm('Delete this material?');">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
+          <tr>
+            <td>{{ m.id }}</td>
+            <td>{{ m.material_name }}</td>
+            <td>{{ m.quantity_used if m.quantity_used is not none else '' }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="text-center text-muted">No materials recorded for this work</td></tr>
         {% endfor %}
+      </tbody>
     </table>
-    {% else %}
-        <p>No materials linked to this work yet.</p>
-    {% endif %}
+  </div>
 
-    <p><a href="{{ url_for('teamwork') }}">⬅ Back to TeamWork</a></p>
-</body>
-</html>
+  <a class="btn btn-secondary" href="{{ url_for('teamwork') }}">Back</a>
+  <a class="btn btn-primary" href="{{ url_for('add_material', work_id=work.id) }}">Add Material for this Work</a>
+{% endblock %}

@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Pipeline Dashboard</title>
-</head>
-
-<body>
-    <h1>Welcome to Pipeline Maintenance Dashboard</h1>
-    <ul>
-        <li><a href="{{ url_for('complaints') }}">View Consumer Complaints</a></li>
-        <li><a href="{{ url_for('add_complaint') }}">Add Consumer Complaint</a></li>
-        <!-- Later add links for TeamWork and Materials -->
-        <li><a href="{{ url_for('teamwork') }}">View Team Work</a></li>
-        <li><a href="{{ url_for('add_teamwork') }}">Add Team Work</a></li>
-        <li><a href="{{ url_for('materials') }}">View Materials</a></li>
-        <li><a href="{{ url_for('add_material') }}">Add Material</a></li>
-
-    </ul>
-</body>
-
-</html>
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="mb-4">Welcome</h1>
+  <p class="lead">Use the navigation to manage Complaints, TeamWork, and Materials.</p>
+  <div class="list-group">
+    <a class="list-group-item list-group-item-action" href="{{ url_for('complaints') }}">View Complaints</a>
+    <a class="list-group-item list-group-item-action" href="{{ url_for('teamwork') }}">View TeamWork</a>
+    <a class="list-group-item list-group-item-action" href="{{ url_for('materials') }}">View Materials</a>
+    <!-- <a class="list-group-item list-group-item-action" href="{{ url_for('import_complaints') }}">Import Complaints (Excel/CSV)</a> -->
+  </div>
+{% endblock %}

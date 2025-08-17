@@ -1,37 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Preview Complaints Import</title>
-</head>
-<body>
-  <h1>Preview Complaints Import</h1>
-  <a href="{{ url_for('index') }}">Home</a> 
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Import Preview</h2>
 
-  <p>Total rows in file: {{ summary.total_rows }}</p>
-  <p>Valid rows to import: {{ summary.valid_rows }}</p>
-  <p>Invalid rows: {{ summary.invalid_rows }}</p>
+  <p>
+    <strong>Total rows:</strong> {{ summary.total_rows }} &nbsp;
+    <strong>Valid:</strong> {{ summary.valid_rows }} &nbsp;
+    <strong>Invalid:</strong> {{ summary.invalid_rows }}
+  </p>
 
-  {% if errors and errors|length %}
-    <h3>Row errors</h3>
-    <ul>
-      {% for e in errors %}
-        <li>Row {{ e.row_index }}: {{ ', '.join(e.errors) }}</li>
-      {% endfor %}
-    </ul>
-    <p style="color:#a00">
-      Fix the file and re-upload for the cleanest import.
-    </p>
+  {% if errors and errors|length > 0 %}
+    <div class="alert alert-warning">
+      Some rows have issues. Fix your file and re-upload, or continue (invalid rows will not import).
+    </div>
+    <div class="table-responsive mb-3">
+      <table class="table table-bordered table-sm">
+        <thead class="table-light">
+          <tr><th>Row</th><th>Errors</th></tr>
+        </thead>
+        <tbody>
+          {% for e in errors %}
+            <tr>
+              <td>{{ e.row_index }}</td>
+              <td>{{ ", ".join(e.errors) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% endif %}
 
-  {% if summary.valid_rows > 0 %}
-    <!-- Confirm form -->
-    <form method="post" action="{{ url_for('import_complaints_confirm') }}">
-      <button type="submit">Confirm Import</button>
-    </form>
-  {% else %}
-    <p>No valid rows to import.</p>
-  {% endif %}
-
-  <p><a href="{{ url_for('import_complaints') }}">Upload another file</a></p>
-</body>
-</html>
+  <form method="post" action="{{ url_for('import_complaints_confirm') }}">
+    <button class="btn btn-primary" type="submit">Confirm Import</button>
+    <a class="btn btn-secondary" href="{{ url_for('import_complaints') }}">Back</a>
+  </form>
+{% endblock %}

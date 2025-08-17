@@ -1,142 +1,219 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Complaints</h2>
+  <a class="btn btn-primary" href="{{ url_for('import_complaints') }}">Import Complaints</a>
+  <a class="btn btn-primary" href="{{ url_for('add_complaint') }}">Add Complaint</a>
 
-<head>
-    <title>Consumer Complaints</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</div>
 
-</head>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<!-- <script>
-    $(document).ready(function() {
-        $('select[name="status"]').select2({
-            placeholder: "Select Status",
-            allowClear: true
-        });
-        $('select[name="oht_name"]').select2({
-            placeholder: "Select OHT Name",
-            allowClear: true
-        });
-        $('select[name="issue"]').select2({
-            placeholder: "Select Issue",
-            allowClear: true
-        });
-    }); -->
-<body>
-    <h1>Consumer Complaints</h1>
-    <a href="{{ url_for('index') }}">Home</a> |
-    <a href="{{ url_for('add_complaint') }}">Add Complaint</a> | <a href="{{ url_for('import_complaints') }}">Import from Excel/CSV</a>
-
-    <form method="get" action="{{ url_for('complaints') }}" style="margin-bottom: 12px;">
-        <label>
-            From:
-            <input type="date" name="date_from" value="{{ filters.date_from }}">
-        </label>
-        <label>
-            To:
-            <input type="date" name="date_to" value="{{ filters.date_to }}">
-        </label>
-        <!-- Multi-select for Status -->
-        <!-- Multi-select for Status -->
-<label>Status:
-    <select class="js-multi" name="status" multiple>
+<form class="row g-2 mb-3" method="get" action="{{ url_for('complaints') }}">
+  <div class="col-md-2">
+    <label class="form-label">Date From</label>
+    <input type="date" class="form-control" name="date_from" value="{{ filters.date_from }}">
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Date To</label>
+    <input type="date" class="form-control" name="date_to" value="{{ filters.date_to }}">
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Status</label>
+    <select name="status" class="form-select" multiple>
       {% for s in statuses %}
-        <option value="{{ s }}" {% if s in filters.status %}selected{% endif %}>{{ s }}</option>
+      <option value="{{ s }}" {% if s in filters.status %}selected{% endif %}>{{ s }}</option>
       {% endfor %}
     </select>
-  </label>
-  
-  <!-- Multi-select for OHT Name -->
-  <label>OHT Name:
-    <select class="js-multi" name="oht_name" multiple>
-      {% for oht in oht_names %}
-        <option value="{{ oht }}" {% if oht in filters.oht_name %}selected{% endif %}>{{ oht }}</option>
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">OHT Name</label>
+    <select name="oht_name" class="form-select" multiple>
+      {% for o in oht_names %}
+      <option value="{{ o }}" {% if o in filters.oht_name %}selected{% endif %}>{{ o }}</option>
       {% endfor %}
     </select>
-  </label>
-  <label> issue:
-    <select class="js-multi" name="issue" multiple>
-        {% for issue in issues %}
-        <option value="{{ issue }}" {% if issue in filters.issue %}selected{% endif %}>{{ issue }}</option>
-        {% endfor %}
-        </select>
-        </label>
-  
-        <!-- Multi-select for Issue
-         <label>
-            Issue:
-            <select name="issue" multiple size="5">
-                {% for issue in issues %}
-                <option value="{{ issue }}" {% if issue in filters.issue %}selected{% endif %}>{{ issue }}</option>
-                {% endfor %}
-                </select>
-                </label> -->
-                
-            <label>
-                <!-- issue:
-            <input type="text" name="issue" value="{{ filters.issue }}" placeholder="issue">
-            <label> -->
-                Search:
-                <input type="text" name="q" value="{{ filters.q }}" placeholder="name, details, phone">
-            </label>
-            <button type="submit">Apply</button>
-            <a href="{{ url_for('complaints') }}">Reset</a>
-    </form>
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Customer</th>
-                <th>Mobile</th>
-                <th>OHT Name</th>
-                <th>issue</th>
-                <th>Address</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
-                <th>Details</th>
-                <th>Status</th>
-                <th>Actions</th>
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Issue</label>
+    <select name="issue" class="form-select" multiple>
+      {% for i in issues %}
+      <option value="{{ i }}" {% if i in filters.issue %}selected{% endif %}>{{ i }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Complaint ID</label>
+    <select name="id" class="form-select" multiple>
+      {% for i in id%}
+      <option value="{{ i }}" {% if i in filters.id%}selected{% endif %}>{{ i }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">Search</label>
+    <input type="text" class="form-control" name="q" placeholder="name, details, mobile" value="{{ filters.q }}">
+  </div>
+  <div class="col-md-6 d-flex align-items-end">
+    <button class="btn btn-secondary me-2" type="submit">Filter</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('complaints') }}">Reset</a>
+    <!-- Export button: sends current filters to export route via GET -->
+    <a class="btn btn-success" href="{{ url_for('export_complaints',
+                   date_from=filters.date_from,
+                   date_to=filters.date_to,
+                   status=filters.status,
+                   oht_name=filters.oht_name,
+                   issue=filters.issue,
+                   id=filters.id,
+                   q=filters.q) }}">
+      Export
+    </a>
+  </div>
+</form>
 
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in complaints %}
-            <tr>
-                <td>{{ c['id'] }}</td>
-                <td>{{ c['complaint_date'] }}</td>
-                <td>{{ c['customer_name'] }}</td>
-                <td>{{ c['consumer_mobile_number'] }}</td>
-                <td>{{ c['OHT_name'] }}</td>
-                <td>{{ c['issue'] }}</td>
-                <td>{{ c['Address'] }}</td>
-                <td>{{ c['longitude'] }}</td>
-                <td>{{ c['latitude'] }}</td>
-                <td>{{ c['complaint_details'] }}</td>
-                <td>{{ c['status'] }}</td>
-                <td>
-                    <a href="{{ url_for('edit_complaint', complaint_id=c['id']) }}">Edit</a>
-                    <form method="post" action="{{ url_for('delete_complaint', complaint_id=c['id']) }}"
-                        style="display:inline" onsubmit="return confirm('Delete this complaint?');">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
+{% macro page_link(p) -%}
+{{ url_for('complaints',
+date_from=filters.date_from,
+date_to=filters.date_to,
+status=filters.status,
+oht_name=filters.oht_name,
+issue=filters.issue,
+id=filters.id,
+q=filters.q,
+per_page=per_page,
+page=p) }}
+{%- endmacro %}
 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <script>
-        $(document).ready(function() {
-            $('.js-multi').select2({
-                placeholder: "Select options",  // Placeholder text
-                allowClear: true,               // Show an X to clear selection
-                width: '200px'                  // Adjust width to fit your layout
-            });
-        });
-        </script>
-        
-</body>
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <div class="text-muted">
+    Showing
+    {{ (page-1)*per_page + 1 if total > 0 else 0 }}
+    –
+    {{ (page-1)*per_page + complaints|length }}
+    of {{ total }}
+  </div>
+  <form method="get" class="d-inline">
+    <input type="hidden" name="date_from" value="{{ filters.date_from }}">
+    <input type="hidden" name="date_to" value="{{ filters.date_to }}">
+    {% for s in filters.status %}<input type="hidden" name="status" value="{{ s }}">{% endfor %}
+    {% for o in filters.oht_name %}<input type="hidden" name="oht_name" value="{{ o }}">{% endfor %}
+    {% for i in filters.issue %}<input type="hidden" name="issue" value="{{ i }}">{% endfor %}
+    {% for i in filters.id %}<input type="hidden" name="id" value="{{ i }}">{% endfor %}
+    <input type="hidden" name="q" value="{{ filters.q }}">
+    <select name="per_page" class="form-select d-inline-block" style="width:auto" onchange="this.form.submit()">
+      {% for n in [10,25,50,100] %}
+      <option value="{{ n }}" {% if per_page==n %}selected{% endif %}>{{ n }}/page</option>
+      {% endfor %}
+    </select>
+  </form>
 
-</html>
+
+  <nav aria-label="Complaints pages">
+    <ul class="pagination mb-0">
+      <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+        <a class="page-link" href="{{ page_link(1) }}">First</a>
+      </li>
+      <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+        <a class="page-link" href="{{ page_link(page-1 if page>1 else 1) }}">Prev</a>
+      </li>
+
+      {# Show up to 5 page numbers around current #}
+      {% set start = [1, page-2]|max %}
+      {% set end = [total_pages, page+2]|min %}
+      {% for p in range(start, end+1) %}
+
+      <li class="page-item {% if p == page %}active{% endif %}">
+        <a class="page-link" href="{{ page_link(p) }}">{{ p }}</a>
+      </li>
+      {% endfor %}
+
+      <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+        <a class="page-link" href="{{ page_link(page+1 if page<total_pages else total_pages) }}">Next</a>
+      </li>
+      <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+        <a class="page-link" href="{{ page_link(total_pages if total_pages>0 else 1) }}">Last</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+
+<!-- <div class="table-responsive">
+  <table class="table table-striped table-bordered"> -->
+<div class="d-flex gap-2 my-2"> <button type="button" class="btn btn-danger btn-sm" onclick="confirmBulkDelete()">Delete
+    selected</button> </div>
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-sm table-compact align-middle">
+    <thead class="table-light">
+      <tr>
+        <th style="width:32px;"> <input type="checkbox" id="select-all" onclick="toggleAll(this)"> </th>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>OHT</th>
+        <th>Issue</th>
+        <th>Address</th>
+        <th>Longitude</th>
+        <th>Latitude</th>
+        <th>Details</th>
+        <th>Status</th>
+        <th style="width: 140px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in complaints %}
+      <tr>
+
+        <form id="bulk-form" method="post" action="{{ url_for('complaints_bulk_delete') }}"> <input type="hidden"
+            name="return_to" value="{{ request.query_string.decode('utf-8') }}">
+          <td><input type="checkbox" name="ids" value="{{ c.id }}" class="row-check"> </td>
+
+          <td>{{ c.id }}</td>
+          <td>{{ c.complaint_date }}</td>
+          <td>{{ c.customer_name }}</td>
+          <td>{{ c.consumer_mobile_number or '' }}</td>
+          <td>{{ c.OHT_name or '' }}</td>
+          <td>{{ c.issue or '' }}</td>
+          <!-- <td>{{ c.Address or '' }}</td> -->
+          <td class="cell-wrap">
+            <div class="clamp-2" data-expanded="0"> {{ c.Address or '' }} </div> {% if c.Address and c.Address|length >
+            60%} <span class="toggle-link">more</span> {% endif %}
+          </td>
+          <td>{{ c.longitude if c.longitude is not none else '' }}</td>
+          <td>{{ c.latitude if c.latitude is not none else '' }}</td>
+          <!-- <td>{{ c.complaint_details }}</td> -->
+          <td class="cell-wrap">
+            <div class="clamp-2" data-expanded="0"> {{ c.complaint_details }} </div> {% if c.complaint_details and
+            c.complaint_details|length > 60%} <span class="toggle-link">more</span> {% endif %}
+          </td>
+          <td>{{ c.status or '' }}</td>
+          <!-- <td>
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_complaint', complaint_id=c.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('delete_complaint', complaint_id=c.id) }}" class="d-inline"
+            onsubmit="return confirm('Delete complaint #{{ c.id }}?');">
+            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+          </form>
+        </td> -->
+          <td> <a class="btn btn-sm btn-outline-primary"
+              href="{{ url_for('edit_complaint', complaint_id=c.id) }}">Edit</a> {% if current_user.is_authenticated and
+            current_user.role == 'admin' %} <form method="post"
+              action="{{ url_for('delete_complaint', complaint_id=c.id) }}" class="d-inline"
+              onsubmit="return confirm('Delete complaint #{{ c.id }}?');"> <button class="btn btn-sm btn-outline-danger"
+                type="submit">Delete</button> </form> {% endif %} </td>
+        </form>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="12" class="text-center text-muted">No complaints found</td>
+      </tr>
+      {% endfor %}
+      <script> function toggleAll(master) { document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked); } function confirmBulkDelete() {
+          const selected = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.value); if (selected.length === 0) { alert('Please select at least one record.'); return; } if (confirm('Delete ' + selected.length + ' selected record(s)? This cannot be undone.')) {
+            const form = document.getElementById('bulk-form'); // Clean old hidden id inputs (in case user clicked twice)
+            Array.from(form.querySelectorAll('input[name="ids"]')).forEach(el => { if (!el.classList.contains('row-check')) el.remove(); }); selected.forEach(id => { const hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'ids'; hidden.value = id; form.appendChild(hidden); }); form.submit();
+          }
+        } </script>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

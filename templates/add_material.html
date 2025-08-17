@@ -1,51 +1,29 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Add Material</h2>
+  <form method="post" class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Material Name</label>
+      <input name="material_name" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Quantity Used</label>
+      <input name="quantity_used" type="number" step="any" class="form-control">
+    </div>
+    <div class="col-md-12">
+      <label class="form-label">Link to Work</label>
+      <select name="work_id" class="form-select">
+        <option value="">— None —</option>
+        {% for id, label in works %}
+          <option value="{{ id }}" {% if preselected_work_id and preselected_work_id|int == id %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-<head>
-    <title>Add Material</title>
-</head>
-
-<body>
-    <h1>Add Material</h1>
-    <a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('materials') }}">Back to Materials</a>
-    <form method="post">
-        <p>
-            <label>Material Name:<br>
-                <input type="text" name="material_name" required>
-            </label>
-        </p>
-        <p>
-            <label>Quantity Used (optional):<br>
-                <input type="number" step="any" name="quantity_used" placeholder="e.g., 10 or 2.5">
-            </label>
-        </p>
-        <p>
-            <label>Link to Work:<br>
-                <!-- <select name="work_id" required>
-                    {% for w in works %}
-                    <option value="{{ w['id'] }}">{{ w['id'] }} - {{ w['label'] }}</option>
-                    {% endfor %}
-                </select> -->
-                <select name="work_id" required>
-                    {% for w in works %}
-                      <option value="{{ w['id'] }}"
-                          {% if preselected_work_id and preselected_work_id|int == w['id'] %}selected{% endif %}>
-                        {{ w['id'] }} - {{ w['label'] }}
-                      </option>
-                    {% endfor %}
-                  </select>                  
-            </label>
-        </p>
-        <p>
-            <p>
-                <button type="submit" name="save" value="save">Save</button>
-                <button type="submit" name="save_add_another" value="save_add_another">
-                  Save &amp; Add Another
-                </button>
-              </p>
-              
-        </p>
-    </form>
-</body>
-
-</html>
+    <div class="col-12">
+      <button class="btn btn-primary" name="save">Save</button>
+      <button class="btn btn-outline-primary" name="save_add_another" value="1">Save & Add Another</button>
+      <a class="btn btn-secondary" href="{{ url_for('materials') }}">Cancel</a>
+    </div>
+  </form>
+  {% endblock %}

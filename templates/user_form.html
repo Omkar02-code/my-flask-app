@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">{{ 'Add User' if mode=='add' else 'Edit User' }}</h3> {% if error %}<div class="alert alert-warning">{{
+    error }}</div>{% endif %} <form method="post" class="row g-3" autocomplete="off">
+    <div class="col-md-4"> <label class="form-label">Username</label> <input name="username" class="form-control"
+            value="{{ user.username if user else '' }}" required> </div>
+    <div class="col-md-4"> <label class="form-label">Password {{ '(leave blank to keep current)' if mode=='edit' else ''
+            }}</label> <input type="password" name="password" class="form-control" {{ '' if mode=='edit' else 'required'
+            }}> </div>
+    <div class="col-md-4"> <label class="form-label">Role</label> <select name="role" class="form-select">
+            <option value="team" {% if user and user.role=='team' %}selected{% endif %}>Team</option>
+            <option value="admin" {% if user and user.role=='admin' %}selected{% endif %}>Admin</option>
+        </select> </div>
+    <div class="col-12"> <button class="btn btn-primary">Save</button> <a class="btn btn-secondary"
+            href="{{ url_for('users_list') }}">Cancel</a> </div>
+</form> {% endblock %}

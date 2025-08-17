@@ -1,105 +1,108 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Materials</h2>
+  <a class="btn btn-primary" href="{{ url_for('add_material') }}">Add Material</a>
+</div>
 
-<head>
-    <title>Materials</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<form class="row g-2 mb-3" method="get" action="{{ url_for('materials') }}">
+  <div class="col-md-1">
+    <label class="form-label">Date From</label>
+    <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Date To</label>
+    <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Material Name</label>
+    <select name="material_name" class="form-select" multiple>
+      {% for m in material_names %}
+      <option value="{{ m }}" {% if m in filters.material_name %}selected{% endif %}>{{ m }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Team Member</label>
+    <select name="team_member" class="form-select" multiple>
+      {% for t in team_members %}
+      <option value="{{ t }}" {% if t in filters.team_member %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-1">
+    <label class="form-label">Work ID</label>
+    <select name="work_id" class="form-select" multiple>
+      {% for wid in work_ids %}
+      <option value="{{ wid }}" {% if wid|string in filters.work_id %}selected{% endif %}>{{ wid }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-</head>
+  <div class="col-md-3">
+    <label class="form-label">Search</label>
+    <input class="form-control" name="q" placeholder="material, description" value="{{ filters.q }}">
+  </div>
+  <div class="col-md-4 d-flex align-items-end">
+    <button class="btn btn-secondary me-2">Filter</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('materials') }}">Reset</a>
+    <a class="btn btn-success" href="{{ url_for('export_materials',
+                      date_from=filters.date_from,
+                      date_to=filters.date_to,
+                      material_name=filters.material_name,
+                      team_member=filters.team_member,
+                      work_id=filters.work_id,
+                      q=filters.q) }}">
+      Export
+    </a>
+  </div>
+</form>
 
-<body>
-    <h1>Materials</h1>
-    <a href="{{ url_for('index') }}">Home</a> |
-    <a href="{{ url_for('add_material') }}">Add Material</a>
-    <form method="get" action="{{ url_for('materials') }}" style="margin-bottom:12px;">
-        <label>From:
-          <input type="date" name="date_from" value="{{ filters.date_from }}">
-        </label>
-      
-        <label>To:
-          <input type="date" name="date_to" value="{{ filters.date_to }}">
-        </label>
-      
-        <label>Material:
-          <select class="js-multi" name="material_name" multiple>
-            {% for mname in material_names %}
-              <option value="{{ mname }}" {% if mname in filters.material_name %}selected{% endif %}>{{ mname }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      
-        <label>Team Member:
-          <select class="js-multi" name="team_member" multiple>
-            {% for tm in team_members %}
-              <option value="{{ tm }}" {% if tm in filters.team_member %}selected{% endif %}>{{ tm }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      
-        <label>Work ID:
-          <select class="js-multi" name="work_id" multiple>
-            {% for wid in work_ids %}
-              <option value="{{ wid }}" {% if wid|string in filters.work_id %}selected{% endif %}>{{ wid }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      
-        <label>Search:
-          <input type="text" name="q" value="{{ filters.q }}" placeholder="Material or work description..">
-        </label>
-      
-        <button type="submit">Apply</button>
-        <a href="{{ url_for('materials') }}">Reset</a>
-      </form>
-      
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Material Name</th>
-                <th>Quantity Used</th>
-                <th>Work ID</th>
-                <th>Work Date</th>
-                <th>Team Member</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for m in materials %}
-            <tr>
-                <td>{{ m['id'] }}</td>
-                <td>{{ m['material_name'] }}</td>
-                <td>{{ m['quantity_used'] }}</td>
-                <td>{{ m['work_id'] }}</td>
-                <td>{{ m['work_date'] }}</td>
-                <td>{{ m['team_member'] }}</td>
-                <td>
-                    <!-- Edit link -->
-                    <a href="{{ url_for('edit_material', material_id=m['id']) }}">Edit</a>
-        
-                    <!-- Delete form (POST) -->
-                    <form method="post" action="{{ url_for('delete_material', material_id=m['id']) }}"
-                          style="display:inline"
-                          onsubmit="return confirm('Delete this material record?');">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.js-multi').select2({
-        placeholder: "Select options",
-        allowClear: true,
-        width: '200px'
-    });
-});
-</script>
+<!-- <div class="table-responsive">
+    <table class="table table-striped table-bordered"> -->
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-sm table-compact align-middle">
 
-</body>
-
-</html>
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Material</th>
+        <th>Qty</th>
+        <th>Work ID</th>
+        <th>Work Date</th>
+        <th>Team Member</th>
+        <th>Description</th>
+        <th style="width: 140px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in materials %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.material_name }}</td>
+        <td>{{ r.quantity_used if r.quantity_used is not none else '' }}</td>
+        <td>{{ r.work_id if r.work_id is not none else '' }}</td>
+        <td>{{ r.work_date or '' }}</td>
+        <td>{{ r.team_member or '' }}</td>
+        <td>{{ r.work_description or '' }}</td>
+        <!-- <td>
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_material', material_id=r.id) }}">Edit</a>
+              <form method="post" action="{{ url_for('delete_material', material_id=r.id) }}" class="d-inline" onsubmit="return confirm('Delete material #{{ r.id }}?');">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+              </form>
+            </td> -->
+        <td> <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_material', material_id=r.id) }}">Edit</a>
+           {% if current_user.is_authenticated and current_user.role == 'admin' %} 
+           <form method="post" action="{{ url_for('delete_material', material_id=r.id)}}" class="d-inline"
+            onsubmit="return confirm('Delete material #{{ r.id }}?');"> <button class="btn btn-sm btn-outline-danger"
+              type="submit">Delete</button> </form> {% endif %} </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="text-center text-muted">No records</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

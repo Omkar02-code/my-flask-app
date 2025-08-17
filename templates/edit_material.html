@@ -1,49 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Material</title>
-</head>
-<body>
-    <h1>Edit Material #{{ m['id'] }}</h1>
-    <a href="{{ url_for('materials') }}">Back to Materials List</a>
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Edit Material #{{ m.id }}</h2>
+  <form method="post" class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Material Name</label>
+      <input name="material_name" class="form-control" value="{{ m.material_name }}" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Quantity Used</label>
+      <input name="quantity_used" type="number" step="any" class="form-control" value="{{ m.quantity_used if m.quantity_used is not none else '' }}">
+    </div>
+    <div class="col-md-12">
+      <label class="form-label">Link to Work</label>
+      <select name="work_id" class="form-select">
+        <option value="">— None —</option>
+        {% for id, label in works %}
+          <option value="{{ id }}" {% if m.work_id and m.work_id == id %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-    <form method="post">
-        <!-- Material Name -->
-        <p>
-            <label>Material Name:<br>
-                <input type="text" name="material_name" 
-                       value="{{ m['material_name'] }}" 
-                       required>
-            </label>
-        </p>
-
-        <!-- Quantity Used -->
-        <p>
-            <label>Quantity Used (optional):<br>
-                <input type="number" step="any" name="quantity_used"
-                       value="{{ m['quantity_used'] if m['quantity_used'] is not none else '' }}"
-                       placeholder="e.g., 10 or 2.5">
-            </label>
-        </p>
-
-        <!-- Link to Work -->
-        <p>
-            <label>Link to Work:<br>
-                <select name="work_id" required>
-                    {% for w in works %}
-                        <option value="{{ w['id'] }}"
-                            {% if m['work_id'] == w['id'] %}selected{% endif %}>
-                            {{ w['id'] }} - {{ w['label'] }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </label>
-        </p>
-
-        <!-- Submit Button -->
-        <p>
-            <button type="submit">Save Changes</button>
-        </p>
-    </form>
-</body>
-</html>
+    <div class="col-12">
+      <button class="btn btn-primary">Update</button>
+      <a class="btn btn-secondary" href="{{ url_for('materials') }}">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

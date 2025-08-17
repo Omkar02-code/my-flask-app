@@ -1,54 +1,59 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">Add Complaint</h2>
+<form method="post" class="row g-3">
+  <div class="col-md-3">
+    <label class="form-label">Complaint Date</label>
+    <input type="date" class="form-control" name="complaint_date" required>
+  </div>
+  <div class="col-md-5">
+    <label class="form-label">Customer Name</label>
+    <input class="form-control" name="customer_name" required>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Mobile</label>
+    <input class="form-control" name="consumer_mobile_number" placeholder="+911234567890">
+  </div>
 
-<head>
-    <title>Add Complaint</title>
-</head>
+  <div class="col-md-4">
+    <label class="form-label">OHT Name</label>
+    <input class="form-control" name="OHT_name">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Issue</label>
+    <input class="form-control" name="issue">
+  </div>
+  <!-- <div class="col-md-4">
+      <label class="form-label">Status</label>
+      <input class="form-control" name="status" value="Open">
+    </div> -->
+  <div class="col-md-4"> <label class="form-label">Status</label> <select class="form-select" name="status" required>
+      <option value="Open" selected>Open</option>
+      <option value="Working">Working</option>
+      <option value="Close">Close</option>
+    </select> </div>
+  <div class="col-md-12">
+    <label class="form-label">Address</label>
+    <input class="form-control" name="Address">
+  </div>
 
-<body>
-    <h1>Add New Consumer Complaint</h1>
-    <a href="{{ url_for('complaints') }}">Back to Complaints</a>
-    <form method="post">
-        <p>
-            <label>Date:<br><input type="date" name="complaint_date" required></label>
-        </p>
-        <p>
-            <label>Customer Name:<br><input type="text" name="customer_name" required></label>
-        </p>
-        <p>
-            <label>Consumer Mobile Number:<br><input type="text" name="consumer_mobile_number"></label>
-        </p>
-        <p>
-            <label>OHT Name:<br><input type="text" name="OHT_name"></label>
-        </p>
-        <p>
-            <label>issue:<br><input type="text" name="issue"></label>
-        </p>
-        <p>
-            <label>Address:<br><input type="text" name="Address"></label>
-        </p>
-        <p>
-            <label>Longitude:<br><input type="number" step="any" name="longitude"></label>
-        </p>
-        <p>
-            <label>Latitude:<br><input type="number" step="any" name="latitude"></label>
-        </p>
-        <p>
-            <label>Complaint Details:<br><textarea name="complaint_details"></textarea></label>
-        </p>
-        <p>
-            <label>Status:<br>
-                <select name="status">
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </label>
-        </p>
-        <p>
-            <button type="submit">Add Complaint</button>
-        </p>
-    </form>
-</body>
+  <div class="col-md-6">
+    <label class="form-label">Longitude</label>
+    <input class="form-control" name="longitude" type="number" step="any">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Latitude</label>
+    <input class="form-control" name="latitude" type="number" step="any">
+  </div>
 
-</html>
+  <div class="col-md-12">
+    <label class="form-label">Complaint Details</label>
+    <textarea class="form-control" name="complaint_details" rows="3" required></textarea>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="{{ url_for('complaints') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

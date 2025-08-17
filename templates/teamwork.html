@@ -1,110 +1,134 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>TeamWork</h2>
+  <a class="btn btn-primary" href="{{ url_for('add_teamwork') }}">Add TeamWork</a>
+</div>
 
-<head>
-    <title>Team Work</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<form class="row g-2 mb-3" method="get" action="{{ url_for('teamwork') }}">
+  <div class="col-md-2">
+    <label class="form-label">Date From</label>
+    <input type="date" class="form-control" name="date_from" value="{{ filters.date_from }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Date To</label>
+    <input type="date" class="form-control" name="date_to" value="{{ filters.date_to }}">
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Member</label>
+    <select name="team_member" class="form-select" multiple>
+      {% for m in team_members %}
+      <option value="{{ m }}" {% if m in filters.team_member %}selected{% endif %}>{{ m }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">OHT</label>
+    <select name="OHT" class="form-select" multiple>
+      {% for o in oht_names %}
+      <option value="{{ o }}" {% if o in filters.OHT %}selected{% endif %}>{{ o }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Area</label>
+    <select name="area" class="form-select" multiple>
+      {% for a in areas %}
+      <option value="{{ a }}" {% if a in filters.area %}selected{% endif %}>{{ a }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label">Work Description</label>
+    <select name="work_description" class="form-select" multiple>
+      {% for w in work_descriptions %}
+      <option value="{{ w }}" {% if w in filters.work_description %}selected{% endif %}>{{ w }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-</head>
+  <div class="col-md-3">
+    <label class="form-label">Complaint ID</label>
+    <select name="complaint_id" class="form-select" multiple>
+      {% for cid in complaint_ids %}
+      <option value="{{ cid }}" {% if cid|string in filters.complaint_id %}selected{% endif %}>{{ cid }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-<body>
-    <h1>Team Work</h1>
-    <a href="{{ url_for('index') }}">Home</a> |
-    <a href="{{ url_for('add_teamwork') }}">Add Team Work</a>
-    <form method="get" action="{{ url_for('teamwork') }}" style="margin-bottom:12px;">
-        <label>From: <input type="date" name="date_from" value="{{ filters.date_from }}"></label>
-        <label>To: <input type="date" name="date_to" value="{{ filters.date_to }}"></label>
-      
-        <label>Team Member:
-          <select class="js-multi" name="team_member" multiple>
-            {% for tm in team_members %}
-              <option value="{{ tm }}" {% if tm in filters.team_member %}selected{% endif %}>{{ tm }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      
-        <label>OHT:
-          <select class="js-multi" name="OHT" multiple>
-            {% for o in oht_names %}
-              <option value="{{ o }}" {% if o in filters.OHT %}selected{% endif %}>{{ o }}</option>
-            {% endfor %}
-          </select>
-        </label>
-      
-        <label>Area:
-          <select class="js-multi" name="area" multiple>
-            {% for a in areas %}
-              <option value="{{ a }}" {% if a in filters.area %}selected{% endif %}>{{ a }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        <label>Complaint ID:
-          <select class="js-multi" name="complaint_id" multiple>
-            {% for c in complaint_ids %}
-              <option value="{{ c }}" {% if c in filters.complaint_id %}selected{% endif %}>{{ c }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        <label>Search:
-          <input type="text" name="q" value="{{ filters.q }}" placeholder="Work, customer, complaint..">
-        </label>
-      
-        <button type="submit">Apply</button>
-        <a href="{{ url_for('teamwork') }}">Reset</a>
-      </form>
-      
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Work Date</th>
-                <th>Team Member</th>
-                <th>OHT</th>
-                <th>Area</th>
-                <th>Description</th>
-                <th>Complaint (ID)</th>
-                <th>Consumer_name</th>
-                <th>Complaint details</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for t in teamwork %}
-            <tr>
-                <td>{{ t['id'] }}</td>
-                <td>{{ t['work_date'] }}</td>
-                <td>{{ t['team_member'] }}</td>
-                <td>{{ t['OHT'] }}</td>
-                <td>{{ t['area'] }}</td>
-                <td>{{ t['work_description'] }}</td>
-                <td>{{ t['complaint_id'] }}</td>
-                <!-- <td>{{ t['Consumer_name'] }}</td>
-                <td>{{ t['complaint_details'] }}</td> -->
-                <td>{{ t['complaint_customer'] }}</td>
-                <td>{{ t['complaint_summary'] }}</td>
-                <td>
-                    <a href="{{ url_for('edit_teamwork', work_id=t['id']) }}">Edit</a>
-                    <form method="post" action="{{ url_for('delete_teamwork', work_id=t['id']) }}" style="display:inline" onsubmit="return confirm('Delete this work entry?');">
-                      <button type="submit">Delete</button> | <a href="{{ url_for('materials_for_work', work_id=t['id']) }}">Materials</a>
+  <div class="col-md-5">
+    <label class="form-label">Search</label>
+    <input type="text" class="form-control" name="q" placeholder="work, customer, summary" value="{{ filters.q }}">
+  </div>
 
-                    </form>
-                  </td>
-                  
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('.js-multi').select2({
-        placeholder: "Select options",
-        allowClear: true,
-        width: '200px'
-    });
-});
-</script>
-</body>
+  <div class="col-md-4 d-flex align-items-end">
+    <button class="btn btn-secondary me-2" type="submit">Filter</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('teamwork') }}">Reset</a>
+    <a class="btn btn-success" href="{{ url_for('export_teamwork',
+                      date_from=filters.date_from,
+                      date_to=filters.date_to,
+                      team_member=filters.team_member,
+                      OHT=filters.OHT,
+                      area=filters.area,
+                      work_description=filters.work_description,
+                      complaint_id=filters.complaint_id,
+                      q=filters.q) }}">
+      Export
+    </a>
+  </div>
+</form>
 
-</html>
+<!-- <div class="table-responsive">
+    <table class="table table-striped table-bordered"> -->
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-sm table-compact align-middle">
+
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Member</th>
+        <th>OHT</th>
+        <th>Area</th>
+        <th>Description</th>
+        <th>Complaint</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in teamwork %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.work_date }}</td>
+        <td>{{ r.team_member }}</td>
+        <td>{{ r.OHT or '' }}</td>
+        <td>{{ r.area or '' }}</td>
+        <td>{{ r.work_description or '' }}</td>
+        <td>
+          {% if r.complaint_id %}
+          #{{ r.complaint_id }} — {{ r.complaint_customer or '' }}
+          {% else %}
+          —
+          {% endif %}
+        </td>
+        <td>
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_teamwork', work_id=r.id) }}">Edit</a>
+          <a class="btn btn-sm btn-outline-secondary"
+            href="{{ url_for('materials_for_work', work_id=r.id) }}">Materials</a>
+          <!-- <form method="post" action="{{ url_for('delete_teamwork', work_id=r.id) }}" class="d-inline" onsubmit="return confirm('Delete work #{{ r.id }}?');">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+              </form> -->
+          {% if current_user.is_authenticated and current_user.role == 'admin' %} <form method="post"
+            action="{{url_for('delete_teamwork', work_id=r.id) }}" class="d-inline" onsubmit="return confirm('Delete work #{{ r.id }}?');"> <button class="btn btn-sm btn-outline-danger"
+              type="submit">Delete</button> </form> {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="text-center text-muted">No records</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

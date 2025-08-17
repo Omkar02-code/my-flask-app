@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">Dashboard</h2>
+<div class="row g-3 mb-3">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Total Complaints</div>
+                <div class="h4 mb-0">{{ kpi.total_complaints }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Open</div>
+                <div class="h4 mb-0">{{ kpi.open }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Working</div>
+                <div class="h4 mb-0">{{ kpi.working }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Close</div>
+                <div class="h4 mb-0">{{ kpi.close }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">Complaints (last 30 days)</h6> <canvas id="complaintsDaily" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">TeamWork (last 30 days)</h6> <canvas id="teamworkDaily" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">Top Issues</h6> <canvas id="issuesTop" height="140"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">Top OHT</h6> <canvas id="ohtTop" height="140"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">Recent Open Complaints</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>OHT</th>
+                                <th>Issue</th>
+                            </tr>
+                        </thead>
+                        <tbody> {% for r in recent_open %} <tr>
+                                <td>{{ r.complaint_date }}</td>
+                                <td>{{ r.customer_name }}</td>
+                                <td>{{ r.OHT_name }}</td>
+                                <td>{{ r.issue }}</td>
+                            </tr> {% endfor %} </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-2">Today’s TeamWork</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Member</th>
+                                <th>OHT</th>
+                                <th>Area</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody> {% for w in today_work %} <tr>
+                                <td>{{ w.team_member }}</td>
+                                <td>{{ w.OHT }}</td>
+                                <td>{{ w.area }}</td>
+                                <td>{{ w.work_description }}</td>
+                            </tr> {% endfor %} </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Complaints by OHT × Issue </h6> <small class="text-muted">Top {{
+                pivot.rows|length }} OHTs</small>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Row Labels</th>
+                        {% for col in pivot.cols %}
+                        <th class="text-end">{{ col }}</th>
+                        {% endfor %}
+                        <th class="text-end">Grand Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for r in pivot.rows %}
+                    <tr>
+                        <td>{{ r }}</td>
+                        {% for c in pivot.cols %}
+                        <!-- <td class="text-end">{{ pivot.data[r][c] }}</td> -->
+                        <td class="text-end"> <a
+                                href="{{ url_for('complaints', oht_name=r, issue=c, status=['Open','Working'])}}"> {{
+                                pivot.data[r][c] }} </a> </td>
+                        {% endfor %}
+                        <td class="text-end fw-semibold">{{ pivot.row_totals[r] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+                <tfoot class="table-light">
+                    <tr>
+                        <th>Total</th>
+                        {% for c in pivot.cols %}
+                        <th class="text-end">{{ pivot.col_totals[c] }}</th>
+                        {% endfor %}
+                        <th class="text-end">{{ pivot.grand_total }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script> document.addEventListener('DOMContentLoaded', function () { const cDaily = {{ charts.complaints_daily| tojson }}; const tDaily = {{ charts.teamwork_daily| tojson }}; const topIssues = {{ charts.top_issues| tojson }}; const topOHT = {{ charts.top_oht| tojson }}; new Chart(document.getElementById('complaintsDaily'), { type: 'line', data: { labels: cDaily.labels, datasets: [{ label: 'Complaints', data: cDaily.data, borderColor: '#0d6efd', tension: 0.3, fill: false }] }, options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxTicksLimit: 6 } } } } }); new Chart(document.getElementById('teamworkDaily'), { type: 'line', data: { labels: tDaily.labels, datasets: [{ label: 'TeamWork', data: tDaily.data, borderColor: '#198754', tension: 0.3, fill: false }] }, options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxTicksLimit: 6 } } } } }); new Chart(document.getElementById('issuesTop'), { type: 'bar', data: { labels: topIssues.labels, datasets: [{ data: topIssues.data, backgroundColor: '#6f42c1' }] }, options: { plugins: { legend: { display: false } }, indexAxis: 'y' } }); new Chart(document.getElementById('ohtTop'), { type: 'bar', data: { labels: topOHT.labels, datasets: [{ data: topOHT.data, backgroundColor: '#fd7e14' }] }, options: { plugins: { legend: { display: false } }, indexAxis: 'y' } }); }); </script>
+
+{% endblock %}

@@ -1,34 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Import Complaints</title>
-</head>
-<body>
-  <h1>Import Complaints (.xlsx or .csv)</h1>
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Import Complaints</h2>
 
-  <!-- Link back to complaints list -->
-  <a href="{{ url_for('complaints') }}">Back to Complaints</a>
-
-  <!-- Show error message if passed from Flask -->
   {% if error %}
-    <p style="color:red">{{ error }}</p>
+    <div class="alert alert-warning">{{ error }}</div>
   {% endif %}
 
-  <!-- Upload form -->
-  <form method="post" enctype="multipart/form-data">
-    <p>
-      <input type="file" name="file" accept=".xlsx,.csv" required>
-    </p>
-    <p>
-      <button type="submit">Upload & Preview</button>
-    </p>
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-8">
+      <label class="form-label">Upload .xlsx or .csv</label>
+      <input type="file" name="file" class="form-control" accept=".xlsx,.csv" required>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-primary">Upload & Preview</button>
+      <a class="btn btn-secondary" href="{{ url_for('complaints') }}">Cancel</a>
+    </div>
   </form>
 
   <hr>
-  <h3>Expected columns</h3>
-  <p>
-    Required: complaint_date, customer_name, complaint_details<br>
-    Optional: consumer_mobile_number, OHT_name, issue, address,longitude, latitude, status
-  </p>
-</body>
-</html>
+  <h5>Expected columns</h5>
+  <ul>
+    <li>Required: complaint_date, customer_name, complaint_details</li>
+    <li>Optional: consumer_mobile_number, OHT_name, issue, Address, longitude, latitude, status</li>
+  </ul>
+{% endblock %}

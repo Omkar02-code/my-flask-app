@@ -1,58 +1,42 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-3">Add TeamWork</h2>
+  <form method="post" class="row g-3">
+    <div class="col-md-3">
+      <label class="form-label">Work Date</label>
+      <input type="date" name="work_date" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Team Member</label>
+      <input name="team_member" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">OHT</label>
+      <input name="OHT" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Area</label>
+      <input name="area" class="form-control">
+    </div>
 
-<head>
-    <title>Add Team Work</title>
-</head>
+    <div class="col-md-12">
+      <label class="form-label">Work Description</label>
+      <textarea name="work_description" class="form-control" rows="3"></textarea>
+    </div>
 
-<body>
-    <h1>Add Team Work</h1>
-    <a href="{{ url_for('teamwork') }}">Back to Team Work</a>
-    <form method="post">
-        <p>
-            <label>Work Date:<br>
-                <input type="date" name="work_date" required>
-            </label>
-        </p>
-        <p>
-            <label>Team Member:<br>
-                <input type="text" name="team_member" required>
-            </label>
-        </p>
-        <p>
-            <label>OHT:<br>
-                <input type="text" name="OHT">
-            </label>
-        </p>
-        <p>
-            <label>Area:<br>
-                <input type="text" name="area">
-            </label>
-        </p>
-        <p>
-            <label>Work Description:<br>
-                <textarea name="work_description"></textarea>
-            </label>
-        </p>
-        <p>
-            <label>Related Complaint (optional):<br>
-                <select name="complaint_id">
-                    <option value="">-- None --</option>
-                    {% for c in complaints %}
-                    <option value="{{ c['id'] }}">{{ c['id'] }} - {{ c['label'] }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-        </p>
-        <p>
-            <!-- <label>Materials (free text note for now):<br>
-                <input type="text" name="material_used" placeholder="e.g., PVC Pipe, Valve"> -->
-            </label>
-        </p>
-        <p>
-            <button type="submit">Add Work</button>
-        </p>
-    </form>
-</body>
+    <div class="col-md-12">
+      <label class="form-label">Link to Complaint (optional)</label>
+      <select name="complaint_id" class="form-select">
+        <option value="">— None —</option>
+        {% for id, label in complaints %}
+          <option value="{{ id }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-</html>
+    <div class="col-12">
+      <button class="btn btn-primary">Save</button>
+      <a class="btn btn-secondary" href="{{ url_for('teamwork') }}">Cancel</a>
+    </div>
+  </form>
+{% endblock %}
