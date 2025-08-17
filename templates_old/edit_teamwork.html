@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Team Work</title>
+</head>
+<body>
+    <h1>Edit Team Work #{{ w['id'] }}</h1>
+    <a href="{{ url_for('teamwork') }}">Back to Team Work List</a>
+
+    <form method="post">
+        <p>
+            <label>Work Date:<br>
+                <input type="date" name="work_date" 
+                       value="{{ w['work_date'] }}" 
+                       required>
+            </label>
+        </p>
+
+        <p>
+            <label>Team Member:<br>
+                <input type="text" name="team_member" 
+                       value="{{ w['team_member'] }}" 
+                       required>
+            </label>
+        </p>
+
+        <p>
+            <label>OHT:<br>
+                <input type="text" name="OHT" 
+                       value="{{ w['OHT'] or '' }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Area:<br>
+                <input type="text" name="area" 
+                       value="{{ w['area'] or '' }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Work Description:<br>
+                <textarea name="work_description">{{ w['work_description'] or '' }}</textarea>
+            </label>
+        </p>
+
+        <p>
+            <label>Related Complaint (optional):<br>
+                <select name="complaint_id">
+                    <option value="">-- None --</option>
+                    {% for c in complaints %}
+                        <option value="{{ c['id'] }}" 
+                            {% if w['complaint_id'] == c['id'] %}selected{% endif %}>
+                            {{ c['id'] }} - {{ c['label'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </p>
+
+        <!-- <p>
+            <label>Materials (note):<br>
+                <input type="text" name="material_used" 
+                       value="{{ w['material_used'] or '' }}" 
+                       placeholder="e.g., PVC Pipe, Valve">
+            </label>
+        </p> -->
+
+        <p>
+            <button type="submit">Save Changes</button>
+        </p>
+    </form>
+</body>
+</html>

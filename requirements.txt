@@ -2,8 +2,7 @@ flask
 gunicorn
 pandas
 openpyxl
-json
-datetime
-sqlite3
-os
-re
+flask_sqlalchemy
+psycopg2-binary
+flask-login
+werkzeug

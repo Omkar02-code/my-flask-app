@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Material</title>
+</head>
+
+<body>
+    <h1>Add Material</h1>
+    <a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('materials') }}">Back to Materials</a>
+    <form method="post">
+        <p>
+            <label>Material Name:<br>
+                <input type="text" name="material_name" required>
+            </label>
+        </p>
+        <p>
+            <label>Quantity Used (optional):<br>
+                <input type="number" step="any" name="quantity_used" placeholder="e.g., 10 or 2.5">
+            </label>
+        </p>
+        <p>
+            <label>Link to Work:<br>
+                <!-- <select name="work_id" required>
+                    {% for w in works %}
+                    <option value="{{ w['id'] }}">{{ w['id'] }} - {{ w['label'] }}</option>
+                    {% endfor %}
+                </select> -->
+                <select name="work_id" required>
+                    {% for w in works %}
+                      <option value="{{ w['id'] }}"
+                          {% if preselected_work_id and preselected_work_id|int == w['id'] %}selected{% endif %}>
+                        {{ w['id'] }} - {{ w['label'] }}
+                      </option>
+                    {% endfor %}
+                  </select>                  
+            </label>
+        </p>
+        <p>
+            <p>
+                <button type="submit" name="save" value="save">Save</button>
+                <button type="submit" name="save_add_another" value="save_add_another">
+                  Save &amp; Add Another
+                </button>
+              </p>
+              
+        </p>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Team Work</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <h1>Team Work</h1>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('add_teamwork') }}">Add Team Work</a>
+    <form method="get" action="{{ url_for('teamwork') }}" style="margin-bottom:12px;">
+        <label>From: <input type="date" name="date_from" value="{{ filters.date_from }}"></label>
+        <label>To: <input type="date" name="date_to" value="{{ filters.date_to }}"></label>
+      
+        <label>Team Member:
+          <select class="js-multi" name="team_member" multiple>
+            {% for tm in team_members %}
+              <option value="{{ tm }}" {% if tm in filters.team_member %}selected{% endif %}>{{ tm }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      
+        <label>OHT:
+          <select class="js-multi" name="OHT" multiple>
+            {% for o in oht_names %}
+              <option value="{{ o }}" {% if o in filters.OHT %}selected{% endif %}>{{ o }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      
+        <label>Area:
+          <select class="js-multi" name="area" multiple>
+            {% for a in areas %}
+              <option value="{{ a }}" {% if a in filters.area %}selected{% endif %}>{{ a }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Complaint ID:
+          <select class="js-multi" name="complaint_id" multiple>
+            {% for c in complaint_ids %}
+              <option value="{{ c }}" {% if c in filters.complaint_id %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Search:
+          <input type="text" name="q" value="{{ filters.q }}" placeholder="Work, customer, complaint..">
+        </label>
+      
+        <button type="submit">Apply</button>
+        <a href="{{ url_for('teamwork') }}">Reset</a>
+      </form>
+      
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Work Date</th>
+                <th>Team Member</th>
+                <th>OHT</th>
+                <th>Area</th>
+                <th>Description</th>
+                <th>Complaint (ID)</th>
+                <th>Consumer_name</th>
+                <th>Complaint details</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in teamwork %}
+            <tr>
+                <td>{{ t['id'] }}</td>
+                <td>{{ t['work_date'] }}</td>
+                <td>{{ t['team_member'] }}</td>
+                <td>{{ t['OHT'] }}</td>
+                <td>{{ t['area'] }}</td>
+                <td>{{ t['work_description'] }}</td>
+                <td>{{ t['complaint_id'] }}</td>
+                <!-- <td>{{ t['Consumer_name'] }}</td>
+                <td>{{ t['complaint_details'] }}</td> -->
+                <td>{{ t['complaint_customer'] }}</td>
+                <td>{{ t['complaint_summary'] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_teamwork', work_id=t['id']) }}">Edit</a>
+                    <form method="post" action="{{ url_for('delete_teamwork', work_id=t['id']) }}" style="display:inline" onsubmit="return confirm('Delete this work entry?');">
+                      <button type="submit">Delete</button> | <a href="{{ url_for('materials_for_work', work_id=t['id']) }}">Materials</a>
+
+                    </form>
+                  </td>
+                  
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.js-multi').select2({
+        placeholder: "Select options",
+        allowClear: true,
+        width: '200px'
+    });
+});
+</script>
+</body>
+
+</html>

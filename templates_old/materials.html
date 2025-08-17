@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Materials</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <h1>Materials</h1>
+    <a href="{{ url_for('index') }}">Home</a> |
+    <a href="{{ url_for('add_material') }}">Add Material</a>
+    <form method="get" action="{{ url_for('materials') }}" style="margin-bottom:12px;">
+        <label>From:
+          <input type="date" name="date_from" value="{{ filters.date_from }}">
+        </label>
+      
+        <label>To:
+          <input type="date" name="date_to" value="{{ filters.date_to }}">
+        </label>
+      
+        <label>Material:
+          <select class="js-multi" name="material_name" multiple>
+            {% for mname in material_names %}
+              <option value="{{ mname }}" {% if mname in filters.material_name %}selected{% endif %}>{{ mname }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      
+        <label>Team Member:
+          <select class="js-multi" name="team_member" multiple>
+            {% for tm in team_members %}
+              <option value="{{ tm }}" {% if tm in filters.team_member %}selected{% endif %}>{{ tm }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      
+        <label>Work ID:
+          <select class="js-multi" name="work_id" multiple>
+            {% for wid in work_ids %}
+              <option value="{{ wid }}" {% if wid|string in filters.work_id %}selected{% endif %}>{{ wid }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      
+        <label>Search:
+          <input type="text" name="q" value="{{ filters.q }}" placeholder="Material or work description..">
+        </label>
+      
+        <button type="submit">Apply</button>
+        <a href="{{ url_for('materials') }}">Reset</a>
+      </form>
+      
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Material Name</th>
+                <th>Quantity Used</th>
+                <th>Work ID</th>
+                <th>Work Date</th>
+                <th>Team Member</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in materials %}
+            <tr>
+                <td>{{ m['id'] }}</td>
+                <td>{{ m['material_name'] }}</td>
+                <td>{{ m['quantity_used'] }}</td>
+                <td>{{ m['work_id'] }}</td>
+                <td>{{ m['work_date'] }}</td>
+                <td>{{ m['team_member'] }}</td>
+                <td>
+                    <!-- Edit link -->
+                    <a href="{{ url_for('edit_material', material_id=m['id']) }}">Edit</a>
+        
+                    <!-- Delete form (POST) -->
+                    <form method="post" action="{{ url_for('delete_material', material_id=m['id']) }}"
+                          style="display:inline"
+                          onsubmit="return confirm('Delete this material record?');">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.js-multi').select2({
+        placeholder: "Select options",
+        allowClear: true,
+        width: '200px'
+    });
+});
+</script>
+
+</body>
+
+</html>

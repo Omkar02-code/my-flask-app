@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Team Work</title>
+</head>
+
+<body>
+    <h1>Add Team Work</h1>
+    <a href="{{ url_for('teamwork') }}">Back to Team Work</a>
+    <form method="post">
+        <p>
+            <label>Work Date:<br>
+                <input type="date" name="work_date" required>
+            </label>
+        </p>
+        <p>
+            <label>Team Member:<br>
+                <input type="text" name="team_member" required>
+            </label>
+        </p>
+        <p>
+            <label>OHT:<br>
+                <input type="text" name="OHT">
+            </label>
+        </p>
+        <p>
+            <label>Area:<br>
+                <input type="text" name="area">
+            </label>
+        </p>
+        <p>
+            <label>Work Description:<br>
+                <textarea name="work_description"></textarea>
+            </label>
+        </p>
+        <p>
+            <label>Related Complaint (optional):<br>
+                <select name="complaint_id">
+                    <option value="">-- None --</option>
+                    {% for c in complaints %}
+                    <option value="{{ c['id'] }}">{{ c['id'] }} - {{ c['label'] }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </p>
+        <p>
+            <!-- <label>Materials (free text note for now):<br>
+                <input type="text" name="material_used" placeholder="e.g., PVC Pipe, Valve"> -->
+            </label>
+        </p>
+        <p>
+            <button type="submit">Add Work</button>
+        </p>
+    </form>
+</body>
+
+</html>
