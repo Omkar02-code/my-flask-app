@@ -1,0 +1,8 @@
+venv/
+pycache/
+.pyc
+.python-version
+.env
+instance/
+uploads/.xlsx
+.DS_Store
