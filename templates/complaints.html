@@ -8,15 +8,15 @@
 </div>
 
 <form class="row g-2 mb-3" method="get" action="{{ url_for('complaints') }}">
-  <div class="col-md-2">
+  <div class="col-md-3">
     <label class="form-label">Date From</label>
     <input type="date" class="form-control" name="date_from" value="{{ filters.date_from }}">
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Date To</label>
     <input type="date" class="form-control" name="date_to" value="{{ filters.date_to }}">
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Status</label>
     <select name="status" class="form-select" multiple>
       {% for s in statuses %}
@@ -24,7 +24,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">OHT Name</label>
     <select name="oht_name" class="form-select" multiple>
       {% for o in oht_names %}
@@ -32,7 +32,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Issue</label>
     <select name="issue" class="form-select" multiple>
       {% for i in issues %}
@@ -40,7 +40,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Complaint ID</label>
     <select name="id" class="form-select" multiple>
       {% for i in id%}
