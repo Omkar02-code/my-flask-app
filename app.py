@@ -1442,6 +1442,15 @@ def create_app():
 
     app.config["SQLALCHEMY_DATABASE_URI"]=database_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True, # check connections before using; auto-reconnect if dead
+    "pool_recycle": 900, # recycle connections every 15 minutes
+    "pool_size": 5, # small pool (adjust if Railway plan allows more)
+    "max_overflow": 5, # allow short bursts
+    "pool_timeout": 30, # wait up to 30s for a connection from pool
+    # safety net if the URL lacked sslmode=require:
+    "connect_args": {"sslmode": "require"},
+    }
     print("Using DB:", app.config["SQLALCHEMY_DATABASE_URI"])
 
     db.init_app(app)
