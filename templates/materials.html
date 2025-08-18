@@ -6,15 +6,15 @@
 </div>
 
 <form class="row g-2 mb-3" method="get" action="{{ url_for('materials') }}">
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Date From</label>
     <input type="date" name="date_from" class="form-control" value="{{ filters.date_from }}">
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Date To</label>
     <input type="date" name="date_to" class="form-control" value="{{ filters.date_to }}">
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Material Name</label>
     <select name="material_name" class="form-select" multiple>
       {% for m in material_names %}
@@ -22,7 +22,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Team Member</label>
     <select name="team_member" class="form-select" multiple>
       {% for t in team_members %}
@@ -30,7 +30,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-3">
     <label class="form-label">Work ID</label>
     <select name="work_id" class="form-select" multiple>
       {% for wid in work_ids %}
