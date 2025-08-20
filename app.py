@@ -410,27 +410,8 @@ def register_routes(app: Flask):
             qry = qry.filter(or_(
                 like_ci(ConsumerComplaints.customer_name, q),
                 like_ci(ConsumerComplaints.complaint_details, q),
-                ConsumerComplaints.id.like(f"%{q}%"),
                 ConsumerComplaints.consumer_mobile_number.like(f"%{q}%")
             ))
-
-        # rows = qry.order_by(ConsumerComplaints.complaint_date.desc(), ConsumerComplaints.id.desc()).all()
-
-        # return render_template(
-        #     "complaints.html",
-        #     complaints=rows,
-        #     statuses=statuses,
-        #     oht_names=oht_names,
-        #     issues=issues,
-        #     filters={
-        #         "date_from": complaint_date_from,
-        #         "date_to": complaint_date_to,
-        #         "status": sel_statuses,
-        #         "oht_name": sel_oht_names,
-        #         "issue": sel_issues,
-        #         "q": q
-        #     }
-        # 2.a) Pagination inputs (from URL or defaults)
         try:
             page = int(request.args.get("page", 1))
             if page < 1:
