@@ -141,7 +141,7 @@
         </ul>
         <ul class="navbar-nav ms-auto"> {% if current_user.is_authenticated %} <li class="nav-item"><span
               class="navbar-text me-2">Hello, {{ current_user.username }} ({{ current_user.role }})</span></li>
-          <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a> -->
+         
           </li> {% else %} <li
             class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li> {% endif %}
         </ul>
@@ -151,9 +151,10 @@
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a></li> {% if
               current_user.role == 'admin' %} <li><a class="dropdown-item" href="{{ url_for('users_list') }}">User
-                  Management</a></li> {% endif %} <li>
+                  Management</a></li>  <li>
                 <hr class="dropdown-divider">
-              </li>
+              </li>{% endif %}
+               <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">About</a></li>
               <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
             </ul>
           </li> {% else %} <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li> {%
@@ -217,6 +218,31 @@
   </script>
   <script> document.addEventListener('click', function (e) { if (e.target.matches('.toggle-link')) { const box = e.target.previousElementSibling; if (!box) return; const expanded = box.dataset.expanded === '1'; if (expanded) { box.classList.add('clamp-2'); box.dataset.expanded = '0'; e.target.textContent = 'more'; } else { box.classList.remove('clamp-2'); box.dataset.expanded = '1'; e.target.textContent = 'less'; } } }); </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <div class="modal fade" id="aboutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">About Pipeline Dashboard</h5> <button type="button" class="btn-close"
+            data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body small">
+          <p>Pipeline Dashboard centralizes complaints, TeamWork and material tracking with drill-down analytics.</p>
+          <p>Version:  "2.0.1"</p>
+          <p>Developed by <a href=https://www.linkedin.com/in/anuj-pandey-88ba58254?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener">Anuj Kumar Pandey</a>
+            — <a href="mailto:anujpandeygkp02@gmail.com">anujpandeygkp02@gmail.com</a></p>
+          <hr>
+        </div>
+        <div class="modal-footer"> <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button> </div>
+      </div>
+    </div>
+  </div>
 </body>
+  <footer class="border-top mt-4 py-3 small text-muted">
+  <div class="container d-flex justify-content-between align-items-center"> <span>© 2025 Pipeline Dashboard</span>
+    <span>Developed by <a href="https://www.linkedin.com/in/anuj-pandey-88ba58254?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener">Anuj Kumar
+        Pandey</a></span>
+  </div>
+</footer>
+
 
 </html>
