@@ -1322,10 +1322,13 @@ def register_auth_routes(app):
             rec.last_attempt = now
 
             # 5) Lock if threshold reached
-            if rec.attempts >= LOGIN_MAX_ATTEMPTS:
-                rec.locked_until = now + timedelta(minutes=LOGIN_LOCK_MIN)
+            if rec.attempts >=1:
+                if rec.attempts >= LOGIN_MAX_ATTEMPTS:
+                    rec.locked_until = now + timedelta(minutes=LOGIN_LOCK_MIN)
+                    db.session.commit()
+                    return render_template("login.html", error=f"Too many login attempts. Try again after {LOGIN_LOCK_MIN} minutes.")
                 db.session.commit()
-                return render_template("login.html", error="Too many login attempts. Please try again later.")
+                return render_template("login.html", error=f"Wrong Username or password.")
 
         db.session.commit()
         return render_template("login.html", error="Invalid username or password.")
