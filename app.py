@@ -1331,7 +1331,7 @@ def register_auth_routes(app):
                 return render_template("login.html", error=f"Wrong Username or password.")
 
         db.session.commit()
-        return render_template("login.html", error="Invalid username or password.")
+        return render_template("login.html")
 
     @app.route("/logout")
     @login_required
